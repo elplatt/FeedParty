@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Server Selector</title>
+        <style type="text/css">
+            body {
+                white-space: nowrap;
+            }
+      
+            h1 {
+                font-size: 16px;
+            }
+        </style>
+    
+        <script src="fpconfig.js"></script>
+        <script src="mastodon-api.js"></script>
+        <script src="config.js"></script>
+    </head>
+  
+    <body>
+        <h1>Mastodon server</h1>
+        <div>
+            URL
+            <input type="text" id="mastodon-server"/>
+        </div>
+        <div>
+            Email
+            <input type="text" id="mastodon-email"/>
+        </div>
+        <div>
+            Password
+            <input type="password" id="mastodon-password"/>
+        </div>
+        <div>
+            <button type="button" id="mastodon-login">Log in</button>
+        </div>
+        <div>
+            <button type="button" id="mastodon-logout" style="display:none">Log out</button>
+        </div>
+    </body>
+</html>

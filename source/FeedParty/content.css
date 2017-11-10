@@ -1,0 +1,25 @@
+.fp-item {
+    background: white;
+    margin: 0 -1px 10px -1px;
+    padding: 10px;
+    border: solid 1px #dddddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.fp-item .fp-avatar {
+    margin-right: 1em;
+    vertical-align: top;
+}
+
+.fp-item .fp-display {
+    font-weight: bold;
+}
+
+.fp-item .fp-account {
+    color: gray;
+}
+
+.fp-item .fp-content p:last-child {
+    margin-bottom: 0;
+}
