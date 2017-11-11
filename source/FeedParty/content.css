@@ -7,6 +7,16 @@
     font-size: 14px;
 }
 
+.fp-header {
+    position: relative;
+    min-height: 40px;
+}
+
+.fp-text-block {
+    margin-left: 40px;
+    padding: 0 10px;
+}
+
 .fp-item .fp-avatar {
     margin-right: 1em;
     vertical-align: top;
@@ -22,4 +32,40 @@
 
 .fp-item .fp-content p:last-child {
     margin-bottom: 0;
+}
+
+.fp-avatar-block {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.fp-avatar-block img {
+    width: 40px;
+    height: 40px;
+}
+
+.fp-avatar-block .fp-original-avatar {
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:0
+}
+.fp-avatar-block .fp-original-avatar img {
+    width: 30px;
+    height: 30px;
+}
+
+.fp-avatar-block .fp-reblog-avatar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index:1;
+}
+.fp-avatar-block .fp-reblog-avatar img {
+    width: 20px;
+    height: 20px;
 }

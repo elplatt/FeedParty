@@ -102,11 +102,17 @@ FPConfig.prototype = {
     saveServerUrl: function (url) {
         var config = this;
         var items = { "server_url": url };
-        chrome.storage.local.set(items, () => { config["server_url"] = url; });
+        chrome.storage.local.set(items, () => {
+            config.server_url = url;
+            config.load();
+        });
     },
     saveUsername: function (username) {
         var config = this;
         var items = { "username": username };
-        chrome.storage.local.set(items, () => { config["username"] = username; });
+        chrome.storage.local.set(items, () => {
+            config.username = username;
+            config.load();
+        });
     }
 };

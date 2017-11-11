@@ -15,20 +15,38 @@ var onPageLoad = function () {
 };    
 
 /**
+ * Build the DOM tree for a name/account link
+ */
+var buildNameLink = function (account) {
+    
+    // Extract info from account API object
+    var acct = account.acct;
+    var displayName = account.display_name;
+    
+    // Construct user's page url 
+    var accountUser = acct.split('@')[0];
+    var accountDomain = acct.split('@')[1];
+    var accountUrl = "https://" + accountDomain + "/@" + accountUser;
+
+    // Build and return DOM tree
+    var nameLink = document.createElement('a');
+    nameLink.setAttribute('href', accountUrl);    
+    var displaySpan = document.createElement('span');
+    displaySpan.className += "fp-display";
+    nameLink.appendChild(displaySpan);
+    displaySpan.textContent = displayName;
+    var accountSpan = document.createElement('span');
+    accountSpan.className += " fp-account";
+    nameLink.appendChild(accountSpan);
+    accountSpan.textContent = ' ' + acct;
+    
+    return nameLink;
+};
+
+/**
  * Build a DOM element from data for a single toot from the mastodon API.
  */
 var buildItem = function (toot) {
-    
-    // Extract relevant information from the toot
-    content = toot.content;
-    displayName = toot.account.display_name;
-    account = toot.account.acct;
-    avatarUrl = toot.account.avatar;
-    
-    // Construct user's page url 
-    accountUser = account.split('@')[0];
-    accountDomain = account.split('@')[1];
-    accountUrl = "https://" + accountDomain + "/@" + accountUser;
     
     // Create container for entire toot
     var item = document.createElement('div');
@@ -38,31 +56,75 @@ var buildItem = function (toot) {
     var header = document.createElement('div');
     item.appendChild(header);
     header.className += " fp-header";
+    var boost = document.createElement('div');
+    header.appendChild(boost);
+    var avatarBlock = document.createElement('div');
+    avatarBlock.className += ' fp-avatar-block';
+    header.appendChild(avatarBlock);
+    var textBlock = document.createElement('div');
+    header.appendChild(textBlock);
+    textBlock.className += " fp-text-block";
+    
+    // If reblog, create original author's avatar
+    var avatar;
+    var avatarLink;
+    var reblog = false;
+    if (toot.hasOwnProperty('reblog') && toot.reblog !== null) {
+        reblog = true;
+        
+        // Extract relevant information from the toot
+        content = '';
+        if (toot.reblog.hasOwnProperty('content')) {
+            content = toot.reblog.content;            
+        }
+        displayName = toot.reblog.account.display_name;
+        account = toot.reblog.account.acct;
+        avatarUrl = toot.reblog.account.avatar;
+        
+        // Construct user's page url 
+        accountUser = account.split('@')[0];
+        accountDomain = account.split('@')[1];
+        accountUrl = "https://" + accountDomain + "/@" + accountUser;
 
+        // Create the avatar
+        avatarLink = document.createElement('a');
+        avatarBlock.appendChild(avatarLink);
+        avatarLink.setAttribute('href', accountUrl);
+        avatarLink.className += " fp-original-avatar";
+        avatar = document.createElement('img');
+        avatarLink.appendChild(avatar);
+        avatar.setAttribute('src', avatarUrl);
+    }
+    
+    // Extract relevant information from the toot
+    var content = toot.content;
+    var displayName = toot.account.display_name;
+    var account = toot.account.acct;
+    var avatarUrl = toot.account.avatar;
+    
+    // Construct user's page url 
+    accountUser = account.split('@')[0];
+    accountDomain = account.split('@')[1];
+    accountUrl = "https://" + accountDomain + "/@" + accountUser;
+    
     // Create the avatar
-    var avatarLink = document.createElement('a');
-    header.appendChild(avatarLink);
+    avatarLink = document.createElement('a');
+    avatarBlock.appendChild(avatarLink);
     avatarLink.setAttribute('href', accountUrl);    
-    var avatar = document.createElement('img');
+    avatar = document.createElement('img');
     avatarLink.appendChild(avatar);
-    avatar.className += " fp-avatar";
+    if (reblog) {
+        avatarLink.className += " fp-reblog-avatar";        
+    }
     avatar.setAttribute('src', avatarUrl);
-    avatar.setAttribute('width', 38);
-    avatar.setAttribute('height', 38);    
 
     // Create the name and account links
-    var nameLink = document.createElement('a');
-    header.appendChild(nameLink);
-    nameLink.setAttribute('href', accountUrl);    
-    displaySpan = document.createElement('span');
-    displaySpan.className += "fp-display";
-    nameLink.appendChild(displaySpan);
-    displaySpan.textContent = displayName;
-    accountSpan = document.createElement('span');
-    accountSpan.className += " fp-account";
-    nameLink.appendChild(accountSpan);
-    accountSpan.textContent = ' ' + account;
-
+    if (reblog) {
+        textBlock.appendChild(buildNameLink(toot.reblog.account));
+    } else {
+        textBlock.appendChild(buildNameLink(toot.account));
+    }
+    
     // Create the item
     var itemContent = document.createElement('div');
     item.appendChild(itemContent);
