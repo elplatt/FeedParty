@@ -1,3 +1,5 @@
+(function () {
+
 /**
  * Main script (called from bottom of file).
  */
@@ -13,6 +15,17 @@ var onPageLoad = function () {
         }
     });
 };    
+
+/**
+ * Build account href from account
+ */
+var buildAccountUrl = function (account) {
+    // Construct user's page url
+    var accountUser = account.acct.split('@')[0];
+    var accountDomain = account.acct.split('@')[1];
+    var accountUrl = "https://" + accountDomain + "/@" + accountUser;
+    return accountUrl;    
+};
 
 /**
  * Build the DOM tree for a name/account link
@@ -52,18 +65,21 @@ var buildItem = function (toot) {
     var item = document.createElement('div');
     item.className += " fp-item";
 
-    // Create header
-    var header = document.createElement('div');
-    item.appendChild(header);
-    header.className += " fp-header";
-    var boost = document.createElement('div');
-    header.appendChild(boost);
+    // Create boosted block
+    var boostedBlock = document.createElement('div');
+    item.appendChild(boostedBlock);
+    boostedBlock.className += " fp-boosted";
+    boostedBlock.style.display = "none";
+    
+    // Create item body
+    var itemBody = document.createElement('div');
+    item.appendChild(itemBody);
+    itemBody.className += " fp-item-body";
+    
+    // Create avatar block
     var avatarBlock = document.createElement('div');
     avatarBlock.className += ' fp-avatar-block';
-    header.appendChild(avatarBlock);
-    var textBlock = document.createElement('div');
-    header.appendChild(textBlock);
-    textBlock.className += " fp-text-block";
+    itemBody.appendChild(avatarBlock);
     
     // If reblog, create original author's avatar
     var avatar;
@@ -71,6 +87,15 @@ var buildItem = function (toot) {
     var reblog = false;
     if (toot.hasOwnProperty('reblog') && toot.reblog !== null) {
         reblog = true;
+        
+        // Fill boosted div
+        var booster = document.createElement('a');
+        booster.href = buildAccountUrl(toot.account);
+        booster.appendChild(document.createTextNode(toot.account.display_name));
+        var boostedText = document.createTextNode(' boosted');
+        boostedBlock.appendChild(booster);
+        boostedBlock.appendChild(boostedText);
+        boostedBlock.style.display = "block";
         
         // Extract relevant information from the toot
         content = '';
@@ -97,7 +122,6 @@ var buildItem = function (toot) {
     }
     
     // Extract relevant information from the toot
-    var content = toot.content;
     var displayName = toot.account.display_name;
     var account = toot.account.acct;
     var avatarUrl = toot.account.avatar;
@@ -120,17 +144,17 @@ var buildItem = function (toot) {
 
     // Create the name and account links
     if (reblog) {
-        textBlock.appendChild(buildNameLink(toot.reblog.account));
+        itemBody.appendChild(buildNameLink(toot.reblog.account));
     } else {
-        textBlock.appendChild(buildNameLink(toot.account));
+        itemBody.appendChild(buildNameLink(toot.account));
     }
     
     // Create the item
-    var itemContent = document.createElement('div');
-    item.appendChild(itemContent);
-    itemContent.className += " fp-content";
+    var content = document.createElement('div');
+    itemBody.appendChild(content);
+    content.className += " fp-content";
     // TODO find a way to sanitize this content!!!
-    itemContent.innerHTML = content;
+    content.innerHTML = toot.content;
     
     return item;
 };
@@ -152,8 +176,10 @@ var insertToots = function (data) {
     // Find the first post in the feed so we can insert before it.
     var firstPost = feed.children[0];
     // Insert mastodon content
-    for (i = 9; i >= 0; i--) {
-        feed.insertBefore(buildItem(data[i]), firstPost);
+    var item;
+    for (i = 0; i < 10; i++) {
+        item = buildItem(data[i]);
+        feed.insertBefore(item, firstPost);
     }    
 };
 
@@ -167,5 +193,6 @@ var onTimelineLoad = function () {
 
 onPageLoad();
 
+})();
 
 

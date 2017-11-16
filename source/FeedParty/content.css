@@ -5,16 +5,20 @@
     border: solid 1px #dddddd;
     border-radius: 5px;
     font-size: 14px;
-}
-
-.fp-header {
     position: relative;
-    min-height: 40px;
+    min-height: 50px;
 }
 
-.fp-text-block {
-    margin-left: 40px;
-    padding: 0 10px;
+.fp-boosted {
+    margin-left: 60px;
+    color: gray;
+    padding-bottom: 1em;
+}
+
+.fp-item-body {
+    margin-left: 60px;
+    position: relative;
+    min-height: 50px;
 }
 
 .fp-item .fp-avatar {
@@ -30,22 +34,29 @@
     color: gray;
 }
 
+.fp-item .fp-content {
+}
+
 .fp-item .fp-content p:last-child {
     margin-bottom: 0;
 }
+.fp-item .fp-content p:first-child {
+    margin-top: 0;
+}
 
 .fp-avatar-block {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     overflow: hidden;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0px;
+    left: -60px;
+    z-index: 1;
 }
 
 .fp-avatar-block img {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
 }
 
 .fp-avatar-block .fp-original-avatar {
@@ -55,17 +66,17 @@
     z-index:0
 }
 .fp-avatar-block .fp-original-avatar img {
-    width: 30px;
-    height: 30px;
+    width: 33px;
+    height: 33px;
 }
 
 .fp-avatar-block .fp-reblog-avatar {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 25px;
+    left: 25px;
     z-index:1;
 }
 .fp-avatar-block .fp-reblog-avatar img {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
 }
