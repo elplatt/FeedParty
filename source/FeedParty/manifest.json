@@ -3,7 +3,7 @@
   
     "name": "FeedParty",
     "description": "Interact with Mastodon through your Facebook timeline.",
-    "version": "0.0.3",
+    "version": "0.0.4",
   
     "content_scripts": [
         {

@@ -17,16 +17,49 @@ var onPageLoad = function () {
 };    
 
 /**
- * Build account href from account
+ * Convert created_at timestamp into time passed.
  */
-var buildAccountUrl = function (account) {
-    // Construct user's page url
-    var accountUser = account.acct.split('@')[0];
-    var accountDomain = account.acct.split('@')[1];
-    var accountUrl = "https://" + accountDomain + "/@" + accountUser;
-    return accountUrl;    
+var getTimePassed = function (created_at) {
+    var created = new Date(created_at);
+    var now = new Date();
+    secPassed = (now.getTime() - created.getTime()) / 1000;
+    
+    if (secPassed < 60) {
+        return Math.round(secPassed) + "s";
+    } else if (secPassed < 60*60) {
+        return Math.round(secPassed / 60) + "m";
+    } else if (secPassed < 60*60*24) {
+        return Math.round(secPassed / (60*60)) + "h";
+    } else {
+        return Math.round(secPassed / (60*60*24)) + "d";
+    }
 };
 
+/**
+ * Build the DOM tree for a time passed link.
+ */
+var buildTimeLink = function (toot) {
+    var span = document.createElement("span");
+    span.className += "fp-meta";
+
+    // Create link
+    var timePassed = document.createTextNode(getTimePassed(toot.created_at));
+    var account = toot.account;
+    if (toot.reblogged) {
+        account = toot.reblog.account;
+    }
+    var link = document.createElement('a');
+    span.appendChild(link);
+    link.className += " fp-time-passed";
+    link.href = account.url + '/' + toot.id;
+    link.appendChild(timePassed);
+    
+    // Create mastodon text
+    span.appendChild(document.createTextNode(" Mastodon"));
+    
+    return span;
+}
+ 
 /**
  * Build the DOM tree for a name/account link
  */
@@ -36,14 +69,9 @@ var buildNameLink = function (account) {
     var acct = account.acct;
     var displayName = account.display_name;
     
-    // Construct user's page url 
-    var accountUser = acct.split('@')[0];
-    var accountDomain = acct.split('@')[1];
-    var accountUrl = "https://" + accountDomain + "/@" + accountUser;
-
     // Build and return DOM tree
     var nameLink = document.createElement('a');
-    nameLink.setAttribute('href', accountUrl);    
+    nameLink.setAttribute('href', account.url);    
     var displaySpan = document.createElement('span');
     displaySpan.className += "fp-display";
     nameLink.appendChild(displaySpan);
@@ -60,6 +88,7 @@ var buildNameLink = function (account) {
  * Build a DOM element from data for a single toot from the mastodon API.
  */
 var buildItem = function (toot) {
+    console.log(toot);
     
     // Create container for entire toot
     var item = document.createElement('div');
@@ -90,7 +119,7 @@ var buildItem = function (toot) {
         
         // Fill boosted div
         var booster = document.createElement('a');
-        booster.href = buildAccountUrl(toot.account);
+        booster.href = toot.account.url;
         booster.appendChild(document.createTextNode(toot.account.display_name));
         var boostedText = document.createTextNode(' boosted');
         boostedBlock.appendChild(booster);
@@ -148,6 +177,10 @@ var buildItem = function (toot) {
     } else {
         itemBody.appendChild(buildNameLink(toot.account));
     }
+    
+    // Add time link
+    itemBody.appendChild(document.createElement('br'));
+    itemBody.appendChild(buildTimeLink(toot));
     
     // Create the item
     var content = document.createElement('div');
