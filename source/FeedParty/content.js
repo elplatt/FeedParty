@@ -17,6 +17,35 @@ var onPageLoad = function () {
 };    
 
 /**
+ * Helper function to quickly build DOM trees, takes either a string (to create)
+ * a text node, or an array:
+ * [
+ *     tagname,
+ *     {attribute1: value1, attribute2: value2, ...},
+ *     child1,
+ *     child2,
+ *     ...
+ * ]
+ */
+var objectToDom = function (o) {
+    if (typeof(o) == "string") {
+        return document.createTextNode(o);
+    }
+    var tagname = o[0];
+    var attributes = o[1];
+    var e = document.createElement(tagname);
+    for (var key in attributes) {
+        if (attributes.hasOwnProperty(key)) {
+            e.setAttribute(key, attributes[key]);
+        }
+    }
+    for (var i = 2; i < o.length; i++) {
+        e.appendChild(objectToDom(o[i]));
+    }
+    return e;
+}
+
+/**
  * Convert created_at timestamp into time passed.
  */
 var getTimePassed = function (created_at) {
@@ -39,25 +68,21 @@ var getTimePassed = function (created_at) {
  * Build the DOM tree for a time passed link.
  */
 var buildTimeLink = function (toot) {
-    var span = document.createElement("span");
-    span.className += "fp-meta";
-
-    // Create link
-    var timePassed = document.createTextNode(getTimePassed(toot.created_at));
+    // Construct strings from toot
+    var timePassed = getTimePassed(toot.created_at);
     var account = toot.account;
-    if (toot.reblogged) {
+    var tootUrl = toot.url;
+    console.log(toot);
+    if (toot.reblog) {
         account = toot.reblog.account;
+        tootUrl = toot.reblog.url;
     }
-    var link = document.createElement('a');
-    span.appendChild(link);
-    link.className += " fp-time-passed";
-    link.href = account.url + '/' + toot.id;
-    link.appendChild(timePassed);
-    
-    // Create mastodon text
-    span.appendChild(document.createTextNode(" Mastodon"));
-    
-    return span;
+    // Build and return DOM tree
+    return objectToDom([
+        "span", {class: "fp-meta"},
+        ["a", {class: "fp-time-passed", href: tootUrl, target: "_blank"}, timePassed],
+        " Mastodon"
+    ]);
 }
  
 /**
