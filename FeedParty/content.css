@@ -1,3 +1,13 @@
+.fp-toot-status {
+    background: white;
+    margin: 0 -1px 10px -1px;
+    padding: 10px;
+    border: solid 1px #dddddd;
+    border-radius: 5px;
+    font-size: 14px;
+    position: relative;
+}
+
 .fp-item {
     background: white;
     margin: 0 -1px 10px -1px;

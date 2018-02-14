@@ -1,10 +1,11 @@
 (function () {
 
+var config = new FPConfig();
+
 /**
  * Main script (called from bottom of file).
  */
 var onPageLoad = function () {
-    var config = new FPConfig();
     config.load().then(() => {
         if (typeof(config.access_token) != "undefined") {
             var timelineUrl = "https://" + config.server_url + "/api/v1/timelines/home";
@@ -231,14 +232,64 @@ var insertToots = function (data) {
             break;
         }
     }
+    // Count unseen toots
+    var latest = config.latest();
+    var unseen = 0;
+    for (i = 0; i < data.length; i++) {
+        if (data[i].created_at > latest) {
+            unseen += 1;
+        }
+    }
     // Find the first post in the feed so we can insert before it.
     var firstPost = feed.children[0];
     // Insert mastodon content
+    var inserted = 0;
     var item;
-    for (i = 0; i < 10; i++) {
-        item = buildItem(data[i]);
-        feed.insertBefore(item, firstPost);
-    }    
+    while (inserted < 5 && data.length > 0) {
+        item = data.pop();
+        if (item.created_at > latest) {
+            item = buildItem(data[i]);
+            feed.insertBefore(item, firstPost);
+            inserted += 1;
+        }
+    }
+};
+
+/**
+ * Insert mastodon status.
+ */
+var insertTootStatus = function () {
+    
+    // Find the DOM element for the feed
+    var feed;
+    var divs = document.getElementsByTagName('div');
+    for (var i = 0; i < divs.length; i++) {
+        if (divs[i].getAttribute('role') == "feed") {
+            feed = divs[i];
+            break;
+        }
+    }
+    var firstPost = feed.children[0];
+    // Insert mastodon status
+    var item = document.createElement('div');
+    item.className += " fp-toot-status";
+    item.id = "fp-toot-status";
+    item.innerHTML = "0 more unread toots";
+    feed.insertBefore(item, firstPost);
+};
+
+/**
+ * Track the most recent toot seen.
+ */
+var updateLatest = function (data) {
+    var latest = config.latest();
+    for (var i = 0; i < data.length; i++) {
+        if (typeof(latest) === 'undefined' || data[i].created_at > latest) {
+            latest = data[i].created_at;
+        }
+    }
+    config.latest(latest);
+    console.log(latest);
 };
 
 /**
@@ -246,6 +297,9 @@ var insertToots = function (data) {
  */
 var onTimelineLoad = function () {
     data = JSON.parse(this.responseText);
+    data = data.reverse();
+    updateLatest(data);
+    insertTootStatus();
     insertToots(data);
 };
 

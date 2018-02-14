@@ -11,6 +11,7 @@ FPConfig.prototype = {
         var config = this;
         return (
             this._loadFromStorage('server_url')
+            .then(() => config._loadFromStorage(config.server_url + ':latest'))
             .then(() => config._loadFromStorage('username'))
             .then(() => config._loadFromStorage(config.server_url + ':client_id'))
             .then(() => config._loadFromStorage(config.server_url + ':client_secret'))
@@ -114,5 +115,18 @@ FPConfig.prototype = {
             config.username = username;
             config.load();
         });
+    },
+    latest: function (newLatest) {
+        var config = this;
+        var key = config.server_url + ':latest';
+        if (typeof(newLatest) === 'undefined') {
+            // Get
+            return config[key];
+        } else {
+            // Set
+            config._saveToStorage({
+                key: newLatest
+            });
+        }
     }
 };
