@@ -73,7 +73,6 @@ var buildTimeLink = function (toot) {
     var timePassed = getTimePassed(toot.created_at);
     var account = toot.account;
     var tootUrl = toot.url;
-    console.log(toot);
     if (toot.reblog) {
         account = toot.reblog.account;
         tootUrl = toot.reblog.url;
@@ -114,7 +113,6 @@ var buildNameLink = function (account) {
  * Build a DOM element from data for a single toot from the mastodon API.
  */
 var buildItem = function (toot) {
-    console.log(toot);
     
     // Create container for entire toot
     var item = document.createElement('div');
@@ -236,7 +234,7 @@ var insertToots = function (data) {
     var latest = config.latest();
     var unseen = 0;
     for (i = 0; i < data.length; i++) {
-        if (data[i].created_at > latest) {
+        if (typeof(latest) === "undefined" || data[i].created_at > latest) {
             unseen += 1;
         }
     }
@@ -246,12 +244,13 @@ var insertToots = function (data) {
     var inserted = 0;
     var item;
     while (inserted < 5 && data.length > 0) {
-        item = data.pop();
-        if (item.created_at > latest) {
-            item = buildItem(data[i]);
-            feed.insertBefore(item, firstPost);
-            inserted += 1;
+        toot = data.pop();
+        if (toot.created_at <= latest) {
+            continue;
         }
+        item = buildItem(toot);
+        feed.insertBefore(item, firstPost);
+        inserted += 1;
     }
 };
 
@@ -289,7 +288,6 @@ var updateLatest = function (data) {
         }
     }
     config.latest(latest);
-    console.log(latest);
 };
 
 /**

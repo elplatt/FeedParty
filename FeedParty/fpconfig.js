@@ -9,7 +9,7 @@ FPConfig.prototype = {
     website: "",
     load: function () {
         var config = this;
-        return (
+        this.loaded = (
             this._loadFromStorage('server_url')
             .then(() => config._loadFromStorage(config.server_url + ':latest'))
             .then(() => config._loadFromStorage('username'))
@@ -34,8 +34,8 @@ FPConfig.prototype = {
                 } else {
                     return new Promise(function (resolve) { resolve(); });
                 }
-            })
-        );
+            }));
+        return this.loaded;
     },
     // Log in using previously registered app, username, and password
     logIn: function (password) {
@@ -124,9 +124,9 @@ FPConfig.prototype = {
             return config[key];
         } else {
             // Set
-            config._saveToStorage({
-                key: newLatest
-            });
+            items = {};
+            items[key] = newLatest;
+            config._saveToStorage(items);
         }
     }
 };
