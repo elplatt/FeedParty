@@ -1,6 +1,7 @@
 var Mastodon = function (token) {
     this.token = token;
 };
+window.Mastodon = Mastodon;
 Mastodon.prototype = {
 }
 Mastodon.OAuth = {
@@ -38,7 +39,6 @@ Mastodon.OAuth = {
         form.append("username", username);
         form.append("password", password);
         
-        // Make the API call
         // Make the API call
         var p = fetch(url, {
             method: "POST",

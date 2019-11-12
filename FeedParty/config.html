@@ -20,14 +20,14 @@
     <body>
         <h1>Mastodon server</h1>
         <div>
-            URL
+            Hostname
             <input type="text" id="mastodon-server"/>
         </div>
         <div>
             Email
             <input type="text" id="mastodon-email"/>
         </div>
-        <div>
+        <div id="mastodon-password-container">
             Password
             <input type="password" id="mastodon-password"/>
         </div>
@@ -36,6 +36,9 @@
         </div>
         <div>
             <button type="button" id="mastodon-logout" style="display:none">Log out</button>
+        </div>
+        <div id="waiting" style="display:none">
+            Logging in...
         </div>
     </body>
 </html>

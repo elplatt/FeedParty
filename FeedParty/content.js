@@ -8,11 +8,10 @@ var config = new FPConfig();
 var onPageLoad = function () {
     config.load().then(() => {
         if (typeof(config.access_token) != "undefined") {
-            var timelineUrl = "https://" + config.server_url + "/api/v1/timelines/home";
-            var req = new XMLHttpRequest();
-            req.addEventListener("load", onTimelineLoad);
-            req.open("GET", timelineUrl + "?access_token=" + config.access_token);
-            req.send();
+            chrome.runtime.sendMessage({
+                'contentScriptQuery': 'loadTimeline',
+                'onLoad': onTimelineLoad
+            });
         }
     });
 };    
@@ -211,7 +210,7 @@ var buildItem = function (toot) {
     itemBody.appendChild(content);
     content.className += " fp-content";
     // TODO find a way to sanitize this content!!!
-    content.innerHTML = toot.content;
+    content.innerHTML = cleanMastodon(toot.content);
     
     return item;
 };
@@ -293,8 +292,7 @@ var updateLatest = function (data) {
 /**
  * Handle timeline data sent from mastodon server.
  */
-var onTimelineLoad = function () {
-    data = JSON.parse(this.responseText);
+var onTimelineLoad = function (data) {
     data = data.reverse();
     updateLatest(data);
     insertTootStatus();

@@ -100,6 +100,15 @@ FPConfig.prototype = {
             });
         });
     },
+    save: function () {
+        var config = this;
+        var items = {};
+        var keys = this._keys();
+        for (i = 0; i < keys.length; i++) {
+            items[keys[i]] = config[keys[i]];
+        }
+        chrome.storage.local.set(items);
+    },
     saveServerUrl: function (url) {
         var config = this;
         var items = { "server_url": url };
@@ -127,6 +136,32 @@ FPConfig.prototype = {
             items = {};
             items[key] = newLatest;
             config._saveToStorage(items);
+        }
+    },
+    _keys: function () {
+        var keys = [
+            'server_url',
+            this.server_url + ':latest',
+            'username',
+            this.server_url + ':client_id',
+            this.server_url + ':client_secret',
+            'access_token'
+        ];
+        return keys;
+    },
+    toJSON: function () {
+        var datum = {};
+        var keys = this._keys();
+        for (var i = 0; i < keys.length; i++) {
+            datum[keys[i]] = this[keys[i]];
+        }
+        return JSON.stringify(datum);
+    },
+    fromJSON: function (json) {
+        datum = JSON.parse(json);
+        keys = this._keys();
+        for (var i = 0; i < keys.length; i++) {
+            this[keys[i]] = datum[keys[i]];
         }
     }
 };
