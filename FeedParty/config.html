@@ -5,10 +5,39 @@
         <style type="text/css">
             body {
                 white-space: nowrap;
+                color: rgb(247, 248, 250);
+                background: rgb(31, 35, 43);
             }
       
             h1 {
                 font-size: 16px;
+            }
+            
+            label {
+                display: inline-block;
+                width: 6em;
+                text-align: right;
+                padding-right: 0.5em;
+            }
+            
+            input {
+                background: #131419;
+                border: 1px solid #0a0b0e;
+                color: #ffffff;
+            }
+            
+            button {
+                font-size: 1em;
+                border-radius: 4px;
+                border-width: 0;
+                margin-top: 0.5em;
+                background: #2b90d9;
+                padding: 5px;
+                color: #ffffff;
+            }
+            
+            .field {
+                margin-bottom:0.75em;
             }
         </style>
     
@@ -19,16 +48,18 @@
   
     <body>
         <h1>Mastodon server</h1>
-        <div>
-            Hostname
+        <div id="status" class="field">
+        </div>
+        <div class="field">
+            <label>Hostname</label>
             <input type="text" id="mastodon-server"/>
         </div>
-        <div>
-            Email
+        <div class="field">
+            <label>Email</label>
             <input type="text" id="mastodon-email"/>
         </div>
-        <div id="mastodon-password-container">
-            Password
+        <div id="mastodon-password-container" class="field">
+            <label>Password</label>
             <input type="password" id="mastodon-password"/>
         </div>
         <div>
@@ -37,7 +68,7 @@
         <div>
             <button type="button" id="mastodon-logout" style="display:none">Log out</button>
         </div>
-        <div id="waiting" style="display:none">
+        <div id="waiting" class="field" style="display:none">
             Logging in...
         </div>
     </body>
