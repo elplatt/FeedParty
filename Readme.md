@@ -3,7 +3,7 @@
 A Chrome extension to insert toots from a Mastodon timeline into a Facebook news feed.
 
 ## Installation
-Download this the current extension code from [https://github.com/elplatt/FeedParty/archive/master.zip].
+Download this the current extension code from https://github.com/elplatt/FeedParty/archive/master.zip.
 Unzip this code. That will create a folder called `FeedParty`, there should be a folder inside that also called `FeedParty`.
 That folder is the unpacked extension folder and it's what you'll load with chrome.
 
@@ -21,13 +21,13 @@ the extension will fetch the latest toots in your mastodon timeline, and if ther
 they will be added to the top of your facebook feed. Only the first 10 are shown.
 
 ## Files
-background.js - Runs in the browser background. This file interacts with the mastodon API and browser storage.
-config.html - The HTML for the configuration popup window.
-config.js - The javascript for the configuration popup window. Uses sendMessage() to communicate with background.js.
-content.css - CSS for the content added to the news feed.
-content.js - Fetches mastodon content and adds it to newsfeed.
-fpconfig.js - Provides a class used to store mastodon server, username, and auth token.
-icon.png - Toolbar icon
-manifest.json - Info about extension
-mastodon-api.js - Provides an interface to the Mastodon OAuth API
-parser.js - Provides simple html parsing for sanitizing mastodon content.
+- background.js - Runs in the browser background. This file interacts with the mastodon API and browser storage.
+- config.html - The HTML for the configuration popup window.
+- config.js - The javascript for the configuration popup window. Uses sendMessage() to communicate with background.js.
+- content.css - CSS for the content added to the news feed.
+- content.js - Fetches mastodon content and adds it to newsfeed.
+- fpconfig.js - Provides a class used to store mastodon server, username, and auth token.
+- icon.png - Toolbar icon
+- manifest.json - Info about extension
+- mastodon-api.js - Provides an interface to the Mastodon OAuth API
+- parser.js - Provides simple html parsing for sanitizing mastodon content.
