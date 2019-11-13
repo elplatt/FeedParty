@@ -292,7 +292,9 @@ var updateLatest = function (data) {
  * Handle timeline data sent from mastodon server.
  */
 var onTimelineLoad = function (data) {
-    data = data.reverse();
+    if (data.length > 0) {
+        data = data.reverse();        
+    }
     updateLatest(data);
     insertTootStatus();
     insertToots(data);
