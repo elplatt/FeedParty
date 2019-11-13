@@ -208,7 +208,7 @@ var buildItem = function (toot) {
     var content = document.createElement('div');
     itemBody.appendChild(content);
     content.className += " fp-content";
-    // TODO find a way to sanitize this content!!!
+    // Uses cleanMastodon() to protect against html injection
     content.innerHTML = cleanMastodon(toot.content);
     
     return item;
