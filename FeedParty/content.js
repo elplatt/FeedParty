@@ -9,9 +9,8 @@ var onPageLoad = function () {
     config.load().then(() => {
         if (typeof(config.access_token) != "undefined") {
             chrome.runtime.sendMessage({
-                'contentScriptQuery': 'loadTimeline',
-                'onLoad': onTimelineLoad
-            });
+                'contentScriptQuery': 'loadTimeline'
+            }, onTimelineLoad);
         }
     });
 };    

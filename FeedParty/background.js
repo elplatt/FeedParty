@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener(
             var timelineUrl = "https://" + config.server_url + "/api/v1/timelines/home";
             var req = new XMLHttpRequest();
             req.addEventListener("load", function () {
-                sendResponse(req.responseText);
+                sendResponse(JSON.parse(req.responseText));
             });
             req.open("GET", timelineUrl + "?access_token=" + config.access_token);
             req.send();
